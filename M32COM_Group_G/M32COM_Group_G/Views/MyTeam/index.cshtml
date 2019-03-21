@@ -67,3 +67,44 @@
     }
 
 </script>
+
+<script>
+    function sendRequestBoat() {
+        var boat = {
+            model: document.getElementById("model").value,
+            year: document.getElementById("year").value
+           
+        }
+        var jsonText = JSON.stringify(boat);
+
+        console.log(jsonText);
+        var divform = document.getElementById("mdl");
+        token = "Bearer tiglaecOjPNyUH6UFeTA0lssKlK4qp5Uu5muQRLX4i2BR3gW3UvQACi1JPz6Qe26ni1iFyDv7MNfVpRZwmMCbTFuxZznlms3htJuf7LR7KzEi/P0zXnNE4ysALUpipsCGXZEnWu1VuccYM7o7oqdAwm8NiUHDYaoIVCWXKuyYYpuTefPmvjncCDRM0L3j3Nbf9/UpfaS/te8gNh7wVghAQ==";
+        $.ajax({
+            url: 'http://localhost:52082/api/team/addboat',
+            type: 'POST',
+            headers: { "Authorization": token },
+            contentType: 'application/json',
+            data: jsonText,
+            processData: false,
+            dataType: 'json',
+            complete: function (data, textStatus, xhr) {
+                var bt = data.responseJSON;
+                console.log(data);
+                console.log(bt.hasError);
+                document.getElementById("boatstatus").innerHTML = bt.message;
+                if (bt.hasError == false) {
+
+                    divform.style.display = 'none';
+                    
+                   
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+    }
+
+</script>
