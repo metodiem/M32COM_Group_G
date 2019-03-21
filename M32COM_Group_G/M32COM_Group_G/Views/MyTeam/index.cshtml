@@ -8,6 +8,13 @@
                 <dd><p id="name"></p></dd>
             </dl>
 
+<div class="form-group">
+    <label for="email">Invite someone to join your team:</label>
+    <input type="text" placeholder="Email" class="form-control" id="email">
+    <button onclick="sendRequest()">Add</button>
+    <p id="invite"></p>
+</div>
+
 <script>
     token = "Bearer 17TvO1HtutHsLDx6wHX7r51rbIPu8fYk99xQYHDGSILN2pSnBLC8U5a42SbQ1htPDpfBuM6f6FN2bwcK8iLU5uH33T9nHmGKpcmWWUmKWKp+BcZUJsXGUbCfamrRaLC0Iq2olsbS4TjxqKyA3MbYzG5VXV5bNRXq01JkeEvDhEimULRPwCS3eJQ7sbez0Dbo5Pwh6iuWDcRFAwK0Tjv9uxdXA/3fgkxIdJM26IETix87K7jROYUlIFjAuvsl4yhq";
     $.ajax({
@@ -31,16 +38,16 @@
 <script>
     function sendRequest() {
         var email = {
-            email : document.getElementById("email").value
+            email: document.getElementById("email").value
         }
         var jsonText = JSON.stringify(email);
-        
+
         console.log(jsonText);
         token = "Bearer tiglaecOjPNyUH6UFeTA0lssKlK4qp5Uu5muQRLX4i2BR3gW3UvQACi1JPz6Qe26ni1iFyDv7MNfVpRZwmMCbTFuxZznlms3htJuf7LR7KzEi/P0zXnNE4ysALUpipsCGXZEnWu1VuccYM7o7oqdAwm8NiUHDYaoIVCWXKuyYYpuTefPmvjncCDRM0L3j3Nbf9/UpfaS/te8gNh7wVghAQ==";
         $.ajax({
             url: 'http://localhost:52082/api/team/invite',
             type: 'POST',
-            headers: { "Authorization": token  },
+            headers: { "Authorization": token },
             contentType: 'application/json',
             data: jsonText,
             processData: false,
@@ -50,7 +57,7 @@
                 var invite = data.message;
                 console.log(invite);
                 document.getElementById("invite").innerHTML = invite;
-                
+
 
             },
             error: function (xhr, textStatus, errorThrown) {
