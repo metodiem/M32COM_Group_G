@@ -2,3 +2,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script>
+
+    token = "Bearer 17TvO1HtutHsLDx6wHX7r51rbIPu8fYk99xQYHDGSILN2pSnBLC8U5a42SbQ1htPDpfBuM6f6FN2bwcK8iLU5uH33T9nHmGKpcmWWUmKWKp+BcZUJsXGUbCfamrRaLC0Iq2olsbS4TjxqKyA3MbYzG5VXV5bNRXq01JkeEvDhEimULRPwCS3eJQ7sbez0Dbo5Pwh6iuWDcRFAwK0Tjv9uxdXA/3fgkxIdJM26IETix87K7jROYUlIFjAuvsl4yhq";
+    $.ajax({
+        url: 'http://localhost:52082/api/team/members',
+        type: 'GET',
+        headers: { "Authorization": token },
+        dataType: 'json',
+        success: function (data, textStatus, xhr) {
+            //console.log(data);
+
+            var usr = data.result;
+
+            //console.log(usr[0]);
+            $("#name").text(usr[0].name + " " + usr[0].surname);
+            $("#teamName").text(usr[0].teamName);
+
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.log('Error in Operation');
+        }
+    });
+
+</script>
