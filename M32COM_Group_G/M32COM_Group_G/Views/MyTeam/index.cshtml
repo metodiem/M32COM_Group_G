@@ -15,6 +15,19 @@
     <p id="invite"></p>
 </div>
 
+<div id="mdl">
+                <div class="model-form">
+                    <label for="email">Add one now:</label>
+                    <input type="text" placeholder="model" class="form-control" id="model">
+
+                    <input type="text" placeholder="year" class="form-control" id="year">
+                    <button onclick="sendRequestBoat()">Add</button>
+
+                </div>
+
+            </div>
+            <p id="boatstatus"></p>
+
 <script>
     token = "Bearer 17TvO1HtutHsLDx6wHX7r51rbIPu8fYk99xQYHDGSILN2pSnBLC8U5a42SbQ1htPDpfBuM6f6FN2bwcK8iLU5uH33T9nHmGKpcmWWUmKWKp+BcZUJsXGUbCfamrRaLC0Iq2olsbS4TjxqKyA3MbYzG5VXV5bNRXq01JkeEvDhEimULRPwCS3eJQ7sbez0Dbo5Pwh6iuWDcRFAwK0Tjv9uxdXA/3fgkxIdJM26IETix87K7jROYUlIFjAuvsl4yhq";
     $.ajax({
