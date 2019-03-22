@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
+using System.Net;
+using System.IO;
+//using Microsoft.AspNet.WebApi.Client;
 
 namespace M32COM_Group_G.Controllers
 {
@@ -13,13 +16,19 @@ namespace M32COM_Group_G.Controllers
         {
             return View();
         }
-        //public JsonResult GetEvents()
-        //{
-        //    using (MyDatabaseEntities dc = new MyDatabaseEntities())
-        //    {
-        //        var events = dc.Events.ToList();
-        //        return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        //    }
-        //}
+
+        public string Get(string uri)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
     }
 }
