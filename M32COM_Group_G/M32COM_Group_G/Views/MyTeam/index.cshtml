@@ -20,12 +20,45 @@
                 <label for="email">Invite someone to join your team:</label>
                 <input type="text" placeholder="Email" class="form-control" id="email">
                 <button onclick="sendRequest()">Add</button>
-                <p id="invite"></p>
+                <p id="sendInvite"></p>
             </div>
 
+            <div class="invitation">
+
+               
+                <div id="invite">
+                    <h2>Invites:  </h2>
+                    <div class="invite-form">
+                        <button onclick="accept()">Accept</button>
+                        <button onclick="decline()">Decline</button>
+                        <p id="inviteStatus"></p>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-lg-6">
             <h2>Boat</h2>
+            <div id="mdlshow">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Model</th>
+                            <td id="boatModel"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Year</th>
+                            <td id="boatYear"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            
+            
+            
             <div id="mdl">
                 <div class="model-form">
                     <label for="email">Add one now:</label>
@@ -35,9 +68,9 @@
                     <button onclick="sendRequestBoat()">Add</button>
 
                 </div>
-
+                <p id="boatstatus"></p>
             </div>
-            <p id="boatstatus"></p>
+            
         </div>
     </div>
 </div>
@@ -46,7 +79,7 @@
 
 <script>
 
-    token = "Bearer 17TvO1HtutHsLDx6wHX7r51rbIPu8fYk99xQYHDGSILN2pSnBLC8U5a42SbQ1htPDpfBuM6f6FN2bwcK8iLU5uH33T9nHmGKpcmWWUmKWKp+BcZUJsXGUbCfamrRaLC0Iq2olsbS4TjxqKyA3MbYzG5VXV5bNRXq01JkeEvDhEimULRPwCS3eJQ7sbez0Dbo5Pwh6iuWDcRFAwK0Tjv9uxdXA/3fgkxIdJM26IETix87K7jROYUlIFjAuvsl4yhq";
+    token = "Bearer 28M1Qr7JIgiX3XcnaAQQQXEoOW1cc1B7E4UhxhBeP4l9h3A8CWqTnaWAWl2tI05Cpdf2I3700zm4cX5fsVMaH2RGXW3IuV/Cx4CRRh8fayaOWL9/YRpOQr0aELB40RZB9fQ192xvD4c6V/K6scQjHAjT8Sw0KdyyVRRPIgVIqia3mD+D1hGpUC68ytYcg8CH+I+IoH7iktHiqAWrXVQpdg==";
     $.ajax({
         url: 'http://localhost:52082/api/team/members',
         type: 'GET',
@@ -66,6 +99,44 @@
             console.log('Error in Operation');
         }
     });
+
+
+    function getBoats() {
+        $.ajax({
+            url: 'http://localhost:52082/api/team/get/boat',
+            type: 'GET',
+            headers: { "Authorization": token },
+            dataType: 'json',
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+                if (data.result !== null) {
+                    document.getElementById("mdlshow").style.display = "inline";
+                    document.getElementById("boatModel").innerHTML = data.result.model;
+                    document.getElementById("boatYear").innerHTML = data.result.year;
+                    if (data.hasError == false) {
+                        document.getElementById("mdl").style.display = "none";
+                    }
+
+
+
+                } else {
+
+                    document.getElementById("mdlshow").style.display = "none";
+
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+    }
+    getBoats();
+
+
+
+
+
 
 </script>
 
@@ -90,7 +161,7 @@
                 console.log(data);
                 var invite = data.message;
                 console.log(invite);
-                document.getElementById("invite").innerHTML = invite;
+                document.getElementById("SendInvite").innerHTML = invite;
                 
 
             },
@@ -130,6 +201,7 @@
                 if (bt.hasError == false) {
 
                     divform.style.display = 'none';
+                    document.getElementById("mdlshow").style.display = "inline";
                     
                    
                 }
@@ -139,9 +211,74 @@
                 console.log('Error in Operation');
             }
         });
+        getBoats();
     }
+    
 
 </script>
+
+<script>
+    token = "Bearer bM/6qh5pKLs+9KZQwT/DgDy9kVRPTQWb3NU4b89AckkOVjULv/8d0iKxHV2ODpZ3d1+MH2VBKJGOR87YYn5C7/R3bYKdmWkSfIJLtxC/a2uFFpjrIf/dWgKxmdXtDAUfvTnR9rkmPm0+IT21HETdNct69JabUrNIdywiobG4CN97zqBIPnpOFG3H3Xsvtb6HYxXN6m/oFK7DHlqR3NE8Hw==";
+    var usr;
+    $.ajax({
+        url: 'http://localhost:52082/api/notification/all',
+        type: 'GET',
+        headers: { "Authorization": token },
+        dataType: 'json',
+        success: function (data, textStatus, xhr) {
+            console.log(data);
+            usr = data.result;
+
+            if (usr.length !== 0) {
+
+                document.getElementById("invite").style.display = "inline";
+                document.getElementById("invite").innerHTML = usr[0].description;
+            } else {
+                document.getElementById("invite").style.display = "none";
+            }
+            // $("#name").text(usr[0].name + " " + usr[0].surname);
+            // $("#teamName").text(usr[0].teamName);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+
+            console.log('Error in Operation');
+        }
+    });
+    function accept() {
+        token = "Bearer bM/6qh5pKLs+9KZQwT/DgDy9kVRPTQWb3NU4b89AckkOVjULv/8d0iKxHV2ODpZ3d1+MH2VBKJGOR87YYn5C7/R3bYKdmWkSfIJLtxC/a2uFFpjrIf/dWgKxmdXtDAUfvTnR9rkmPm0+IT21HETdNct69JabUrNIdywiobG4CN97zqBIPnpOFG3H3Xsvtb6HYxXN6m/oFK7DHlqR3NE8Hw==";
+        var actionToken = usr[0].actionToken;
+        $.ajax({
+            url: 'http://localhost:52082/api/team/respondinvitation/true',
+            type: 'GET',
+            headers: { "Authorization": token, "actionToken": actionToken },
+            dataType: 'json',
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+                var usr = data.result;
+
+                if (data.hasError !== True) {
+                    document.getElementById("inviteStatus").innerHTML = data.message;
+
+                } else {
+                }
+                // $("#name").text(usr[0].name + " " + usr[0].surname);
+                // $("#teamName").text(usr[0].teamName);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+
+                console.log('Error in Operation');
+            }
+        });
+
+    }
+
+
+
+
+
+</script>
+
+
 
 
 
