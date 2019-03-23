@@ -5,37 +5,84 @@
 
 <h2>@ViewBag.Title.</h2>
 
+
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
-    @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
+@Html.AntiForgeryToken()
+<h4>Create a new account.</h4>
+<hr />
+<label id="status"></label>
+<section id="loginForm">
+    <div class="form-group">
+        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @placeholder = "First Name", @id = "name" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Surname, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Surname, new { @class = "form-control",@placeholder = "Surname", @id = "surname" })
+        </div>
+    </div>
+
     <div class="form-group">
         @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control",@placeholder = "Email", @id = "email" })
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password", @id = "password" })
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
+            <a href="#" class="btn btn-default" onclick="Register()">Submit</a>
         </div>
     </div>
-}
+</section>
+<p>
+    @Html.ActionLink("Click here if you already Logged in", "Login")
+</p>
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+            function Register() {
+                var Registerdetails = {
+                    name: document.getElementById("name").value,
+                    surname: document.getElementById("surname").value,
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value
+
+                }
+                var jsonText = JSON.stringify(Registerdetails);
+                console.log(jsonText);
+                var divform = document.getElementById("loginForm");
+                $.ajax({
+                    url: 'http://localhost:52082/api/Registration',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: jsonText,
+                    processData: false,
+                    dataType: 'json',
+                    complete: function (data, textStatus, xhr) {
+                        var bt = data.responseJSON;
+                        console.log(data);
+                        console.log(bt.hasError);
+                        document.getElementById("status").innerHTML = bt.message;
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error in Operation');
+                    }
+                });
+            }
+
+    </script>
+}
+
 }
