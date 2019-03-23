@@ -65,7 +65,7 @@ namespace M32COM_Group_G.Models
     public class RegisterViewModel
     {
         [Required]
-        [Display(Name = "FirstName")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
