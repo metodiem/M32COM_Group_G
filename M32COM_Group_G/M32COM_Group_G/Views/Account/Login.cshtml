@@ -1,15 +1,16 @@
-﻿@using M32COM_Group_G.Models
+﻿@@using M32COM_Group_G.Models
 @model LoginViewModel
 @{
     ViewBag.Title = "Log in";
 }
+<h2>@ViewBag.Title.</h2>
 <div class="row">
     <div class="col-md-8">
         <section id="loginForm">
             @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
             @Html.AntiForgeryToken()
-            <h4>Use a Registered details to log in to the system.</h4>
+            <h4>Use your account details to log in.</h4>
 
 
             <label id="status"></label>
@@ -71,12 +72,12 @@
                 sessionStorage.setItem("token", bt.result.token);
                 document.getElementById("status").innerHTML = bt.message;
                 var token = sessionStorage.getItem("token");
-                console.log("token = " + token)
+                console.log("token = " + token);
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log('Error in Operation');
             }
         });
     }
-
 </script>
+
