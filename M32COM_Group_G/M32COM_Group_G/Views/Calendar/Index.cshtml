@@ -71,10 +71,11 @@
                     eventLimit: true,
                     eventColor: '#370006',
                     events: events,
-                    eventClick: function (calEvent, jsEvent, view)
+                    eventClick: function (calEvent)
                     {
                         $('#myModel #eventTitle').text(calEvent.title);
                         var $description = $('<div/>');
+                        $description.append($('<p/>').html('<b>Name:</b>' + calEvent.title));
                         $description.append($('<p/>').html('<b>Start:</b>' + calEvent.start.format("HH:mm a")));
                         $description.append($('<p/>').html('<b>End:</b>' + calEvent.end.format("HH:mm a")));
                         $description.append($('<p/>').html('<b>Description:</b>' + calEvent.description));

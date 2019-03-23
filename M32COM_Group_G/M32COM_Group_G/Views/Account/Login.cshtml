@@ -3,13 +3,14 @@
 @{
     ViewBag.Title = "Log in";
 }
+<h1>@ViewBag.Title</h1>
 <div class="row">
     <div class="col-md-8">
         <section id="loginForm">
             @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
             @Html.AntiForgeryToken()
-            <h4>Use a Registered details to log in to the system.</h4>
+            <h4>Use your account credentials to log in.</h4>
 
 
             <label id="status"></label>
@@ -55,7 +56,6 @@
 
         }
         var jsonText = JSON.stringify(logindetails);
-        console.log(jsonText);
         var divform = document.getElementById("loginForm");
         $.ajax({
             url: 'http://localhost:52082/api/login',
@@ -66,12 +66,16 @@
             dataType: 'json',
             complete: function (data, textStatus, xhr) {
                 var bt = data.responseJSON;
-                console.log(data);
-                console.log(bt.hasError);
-                sessionStorage.setItem("token", bt.result.token);
-                document.getElementById("status").innerHTML = bt.message;
-                var token = sessionStorage.getItem("token");
-                console.log("token = " + token)
+                if (bt.message == "Email or password is wrong!")
+                {
+                    document.getElementById("status").innerHTML = bt.message;
+                }
+                else 
+                {
+                    document.getElementById("status").innerHTML = bt.message;
+                    sessionStorage.setItem("token", bt.result.token);
+                    var token = sessionStorage.getItem("token");
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log('Error in Operation');
