@@ -4,6 +4,7 @@
 
 <div id="calender"></div>
 
+<!-- Defining the pop up modal. -->
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -21,15 +22,18 @@
     </div>
 </div>
 
+<!--Getting the css for the calendar-->
 <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet"/>
 <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print"/>
 
 @section scripts
     {
+    <!--Get the javascript needed to generate the calendar-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 
     <script>
+        //Calling the function to retrieve all competitions 
         $(document).ready(function () {
             var token = "";
             var events = [];
@@ -37,26 +41,28 @@
                 url: "http://localhost:52082/api/competition/get/all",
                 type: "GET",
                 dataType: 'json',
-                success: function (result)
+                success: function (result) //If the call to the API is successfull 
                 {
-                    $.each(result.result, function (i, v) 
+                    $.each(result.result, function (i, v) //For each competition retrieved from the API
                     {
-                        events.push({
+                        //Define the event and push it into an array for displaying in the calendar later
+                        events.push({ 
                             title: v.name,
                             description: v.description,
                             start: moment(v.startDate),
                             end: moment(v.endDate),
-                            color: moment(v.endDate) > new Date() ? 'green' : 'red',
+                            color: moment(v.endDate) > new Date() ? 'green' : 'red', //If the event is upcoming display in green, otherwise red
                             allDay: false
                         });
                     })
-                    GenerateCalendar(events);
+                    GenerateCalendar(events); //Call the function to generate the calendar passing the array of competitions
                 },
                 error: function (error)
                 {
-                    alert(error);
+                    alert("Problem with back-end connection");
                 }
             })
+            //Generate the calendar
             function GenerateCalendar(events) {
                 $('#calender').fullCalendar('destroy');
                 $('#calender').fullCalendar({
@@ -71,7 +77,7 @@
                     eventLimit: true,
                     eventColor: '#370006',
                     events: events,
-                    eventClick: function (calEvent)
+                    eventClick: function (calEvent) //If the competition was clicked on pop up the modal
                     {
                         $('#myModel #eventTitle').text(calEvent.title);
                         var $description = $('<div/>');
