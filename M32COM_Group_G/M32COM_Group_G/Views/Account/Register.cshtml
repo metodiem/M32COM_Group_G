@@ -52,8 +52,8 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        // Calling WebApi using post method 
-           // Collecting details for the html "id"
+        // Calling WebApi using post method. 
+           // Collecting details 
              function Register() {
                 var Registerdetails = {
                     name: document.getElementById("name").value,
@@ -74,10 +74,11 @@
                     processData: false,
                     dataType: 'json',
                     complete: function (data, textStatus, xhr) {
+                        // storing the data to the database 
                         var bt = data.responseJSON;
                         console.log(data);
                         console.log(bt.hasError);
-                        // Valdition From the database
+                        // validation 
                         document.getElementById("status").innerHTML = bt.message;
                     },
                     error: function (xhr, textStatus, errorThrown) {
