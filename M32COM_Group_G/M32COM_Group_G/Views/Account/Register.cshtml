@@ -11,8 +11,8 @@
 @Html.AntiForgeryToken()
 <h4>Create a new account here!.</h4>
 <hr />
-<label id="status"></label>
-<section id="RegisterForm">
+<label id="status"></label> 
+<section id = "registerForm">
     <div class="form-group">
         @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
@@ -45,7 +45,7 @@
     </div>
 </section>
 <p>
-    @Html.ActionLink("Click here if you already Registed", "Login")
+    @Html.ActionLink("Click here if you already Registered", "Login")
 </p>
 
 
@@ -64,7 +64,7 @@
                 }
                 //Creates and Json application that the api can read 
                 var jsonText = JSON.stringify(Registerdetails);
-                var divform = document.getElementById("RegisterForm");
+                var divform = document.getElementById("registerForm");
                 $.ajax({
                     url: 'http://localhost:52082/api/Registration',
                     type: 'POST',
@@ -85,5 +85,4 @@
 
     </script>
 }
-
 }
