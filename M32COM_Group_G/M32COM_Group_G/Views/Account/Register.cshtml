@@ -12,7 +12,7 @@
 <h4>Create a new account here!.</h4>
 <hr />
 <label id="status"></label>
-<section id="loginForm">
+<section id="RegisterForm">
     <div class="form-group">
         @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
@@ -52,7 +52,9 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-            function Register() {
+        // Calling WebApi using post method 
+           // Collecting details for the html "id"
+             function Register() {
                 var Registerdetails = {
                     name: document.getElementById("name").value,
                     surname: document.getElementById("surname").value,
@@ -60,9 +62,10 @@
                     password: document.getElementById("password").value
 
                 }
+                //Creates and Json application that the api can read 
                 var jsonText = JSON.stringify(Registerdetails);
                 console.log(jsonText);
-                var divform = document.getElementById("loginForm");
+                var divform = document.getElementById("RegisterForm");
                 $.ajax({
                     url: 'http://localhost:52082/api/Registration',
                     type: 'POST',
@@ -74,6 +77,7 @@
                         var bt = data.responseJSON;
                         console.log(data);
                         console.log(bt.hasError);
+                        // Valdition From the database
                         document.getElementById("status").innerHTML = bt.message;
                     },
                     error: function (xhr, textStatus, errorThrown) {
