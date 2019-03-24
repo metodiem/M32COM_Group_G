@@ -70,18 +70,19 @@
             complete: function (data, textStatus, xhr) {
                 //Manipulating data from the api 
                 var bt = data.responseJSON;
-                //Checking Manipulating data is resigtered 
+                //Checking if Login credentials is resigtered
                 if (bt.message == "Email or password is wrong!") {
                     // not resigtered then validation messages will pop up
                     document.getElementById("status").innerHTML = bt.message;
                 }
                 else {
-                    // if Login is successful they will recieve a token 
+                    // if Login is successful user will automacitally get session token authencation 
                     sessionStorage.setItem("token", bt.result.token);
                     sessionStorage.setItem("name", bt.result.name);
                     //successful validation message will pop up 
                     document.getElementById("status").innerHTML = bt.message;
                     var token = sessionStorage.getItem("token");
+                    //if Login credentials are successful then the website will redirect in 1.5 seconds
                     setTimeout(function () {
                         window.location.href = "http://localhost:56067";
                     }, 1500);
