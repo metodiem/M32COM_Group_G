@@ -70,8 +70,13 @@
                 }
                 else {
                     sessionStorage.setItem("token", bt.result.token);
+                    console.log(bt.result.name);
+                    sessionStorage.setItem("name", bt.result.name);
                     document.getElementById("status").innerHTML = bt.message;
                     var token = sessionStorage.getItem("token");
+                    setTimeout(function () {
+                        window.location.href = "http://localhost:56067";
+                    }, 1500);
                 }
             },
             error: function (xhr, textStatus, errorThrown) {

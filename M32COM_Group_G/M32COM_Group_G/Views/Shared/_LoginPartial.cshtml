@@ -16,31 +16,42 @@
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li class="navbar-nav ">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-nav ">
 
 
 
-        <li class="nav-item">
-            <a class="nav-link" href="/myteam">
+            <li class="nav-item">
+                <a class="nav-link" href="/myteam">
 
-                <i class="fa fa-bell">
+                    <i class="fa fa-bell">
 
-                </i>
-            </a>
-        </li>
+                    </i>
+                </a>
+            </li>
 
-        <li class="dropdown show">
-            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="badge badge-info" id="badge"></span>
-            </a>
+            <li class="dropdown show">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="badge badge-info" id="badge"></span>
+                </a>
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <div class="col-lg-12" >
-                    <a class="dropdown-item" id="inviteMessage" href="/myteam" width="00"></a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <div class="col-lg-12">
+                        <a class="dropdown-item" id="inviteMessage" width="00"></a>
+                        <div id="invite">
+                            <div class="invite-form">
+                                <button onclick="accept()">Accept</button>
+                                <button onclick="decline()">Decline</button>
+                                <p id="inviteStatus"></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </li>
+            </li>
+            <li>
+                <a id="name"></a>
+
+            </li>
 
 
 
@@ -48,16 +59,36 @@ else
 
 
 
-        
 
-        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-    </ul>
+
+            <li id="loggedIn">@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li id="loggedIn1">@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+            <li id="logOut" onclick="logout()">@Html.ActionLink("Log out", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+
+        </ul>
 }
 }
 
 <script>
-    token = "Bearer bM/6qh5pKLs+9KZQwT/DgDy9kVRPTQWb3NU4b89AckkOVjULv/8d0iKxHV2ODpZ3d1+MH2VBKJGOR87YYn5C7/R3bYKdmWkSfIJLtxC/a2uFFpjrIf/dWgKxmdXtDAUfvTnR9rkmPm0+IT21HETdNct69JabUrNIdywiobG4CN97zqBIPnpOFG3H3Xsvtb6HYxXN6m/oFK7DHlqR3NE8Hw==";
+    if (sessionStorage.getItem("name") == null) {
+        document.getElementById("loggedIn").style.display = "inline";
+        document.getElementById("loggedIn1").style.display = "inline";
+        document.getElementById("logOut").style.display = "none";
+        document.getElementById("name").innerHTML = "";
+    } else {
+        document.getElementById("name").innerHTML = (sessionStorage.getItem("name"));
+        document.getElementById("loggedIn").style.display = "none";
+        document.getElementById("loggedIn1").style.display = "none";
+        document.getElementById("logOut").style.display = "inline";
+    }
+
+
+    document.getElementById("name").innerHTML = (sessionStorage.getItem("name"));
+    var tokn = sessionStorage.getItem("token");
+    var actionToken;
+    console.log(sessionStorage.getItem("name"));
+    token = "Bearer " + tokn;
+
 
     $.ajax({
         url: 'http://localhost:52082/api/notification/all',
@@ -67,7 +98,8 @@ else
         success: function (data, textStatus, xhr) {
             console.log(data);
             var usr = data.result;
-
+            console.log(usr[0].actionToken + "actionnnnnn");
+            actionToken = usr[0].actionToken;
             if (usr.length !== 0) {
                 document.getElementById("badge").innerHTML = "1";
 
@@ -88,4 +120,51 @@ else
             console.log('Error in Operation');
         }
     });
+
+    
+    function accept() {
+        console.log(actionToken + "actionnnnnn");
+        $.ajax({
+            url: 'http://localhost:52082/api/team/respondinvitation/true',
+            type: 'GET',
+            headers: { "Authorization": token, "actionToken": actionToken },
+            dataType: 'json',
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+                
+                // $("#name").text(usr[0].name + " " + usr[0].surname);
+                // $("#teamName").text(usr[0].teamName);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+
+                console.log('Error in Operation');
+            }
+        });
+
+    }
+    function decline() {
+        console.log(actionToken + "actionnnnnn");
+        $.ajax({
+            url: 'http://localhost:52082/api/team/respondinvitation/false',
+            type: 'GET',
+            headers: { "Authorization": token, "actionToken": actionToken },
+            dataType: 'json',
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+
+                // $("#name").text(usr[0].name + " " + usr[0].surname);
+                // $("#teamName").text(usr[0].teamName);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+
+                console.log('Error in Operation');
+            }
+        });
+
+    }
+    function logout() {
+        
+        console.log(sessionStorage.clear());
+        
+    }
 </script>

@@ -13,5 +13,10 @@ namespace M32COM_Group_G.Controllers
         {
             return View();
         }
+        public ActionResult createTeam()
+        {
+
+            return View();
+        }
     }
 }
