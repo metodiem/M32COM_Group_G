@@ -49,11 +49,15 @@
 
 
 <script>
+
+    // Calling WebApi using post method.
+    // Collecting details
     function login() {
         var logindetails = {
             email: document.getElementById("email").value,
             password: document.getElementById("password").value
         }
+        //Creates and Json application that the api can read 
         var jsonText = JSON.stringify(logindetails);
         var divform = document.getElementById("loginForm");
         $.ajax({
@@ -64,14 +68,18 @@
             processData: false,
             dataType: 'json',
             complete: function (data, textStatus, xhr) {
+                //Manipulating data from the api 
                 var bt = data.responseJSON;
+                //Checking Manipulating data is resigtered 
                 if (bt.message == "Email or password is wrong!") {
+                    // not resigtered then validation messages will pop up
                     document.getElementById("status").innerHTML = bt.message;
                 }
                 else {
+                    // if Login is successful they will recieve a token 
                     sessionStorage.setItem("token", bt.result.token);
-                    console.log(bt.result.name);
                     sessionStorage.setItem("name", bt.result.name);
+                    //successful validation message will pop up 
                     document.getElementById("status").innerHTML = bt.message;
                     var token = sessionStorage.getItem("token");
                     setTimeout(function () {

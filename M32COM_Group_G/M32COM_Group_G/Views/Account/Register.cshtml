@@ -64,7 +64,6 @@
                 }
                 //Creates and Json application that the api can read 
                 var jsonText = JSON.stringify(Registerdetails);
-                console.log(jsonText);
                 var divform = document.getElementById("RegisterForm");
                 $.ajax({
                     url: 'http://localhost:52082/api/Registration',
@@ -74,11 +73,9 @@
                     processData: false,
                     dataType: 'json',
                     complete: function (data, textStatus, xhr) {
-                        // storing the data to the database 
+                        // Reponse from the database after new registration
                         var bt = data.responseJSON;
-                        console.log(data);
-                        console.log(bt.hasError);
-                        // validation 
+                        // validation message will pop up if its successful or not 
                         document.getElementById("status").innerHTML = bt.message;
                     },
                     error: function (xhr, textStatus, errorThrown) {
