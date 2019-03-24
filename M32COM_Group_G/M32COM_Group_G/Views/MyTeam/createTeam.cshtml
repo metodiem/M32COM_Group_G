@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery-3.3.1.js" type="text/javascript"></script>
+
+@{
+    ViewBag.Title = "Teams";
+}
+
+<h2>Welcome</h2>
+
+<div class="createTeam">
+    <p>Please create a team or ask for an invite</p>
+    <h4>Create Team</h4>
+    <input type="text" placeholder="Team name" class="noTeam" id="teamNme">
+    <button onclick="createTeam()">Add</button>
+    <p id="createStatus"></p>
+
+</div>
+
+<script>
+    function createTeam() {
+        var teamName = {
+            name: document.getElementById("teamNme").value
+        }
+        var jsonText = JSON.stringify(teamName);
+        //console.log(jsonText);
+        var token = sessionStorage.getItem("token");
+        console.log(token);
+        token = "Bearer " + token;
+        $.ajax({
+            url: 'http://localhost:52082/api/team/create',
+            type: 'POST',
+            headers: { "Authorization": token },
+            contentType: 'application/json',
+            data: jsonText,
+            processData: false,
+            dataType: 'json',
+            complete: function (data, textStatus, xhr) {
+                document.getElementById("createStatus").innerHTML = data.responseJSON.message;
+                console.log();
+                
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                //console.log('Error in Operation');
+            }
+        });
+        setTimeout(function () {
+            window.location.href = "http://localhost:56067/myteam";
+        }, 1500);
+
+    }
+</script>
+
