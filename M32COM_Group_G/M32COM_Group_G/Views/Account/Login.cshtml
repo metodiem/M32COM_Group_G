@@ -81,6 +81,7 @@
                     sessionStorage.setItem("name", bt.result.name);
                     //successful validation message will pop up 
                     document.getElementById("status").innerHTML = bt.message;
+
                     var token = sessionStorage.getItem("token");
                     //if Login credentials are successful then the website will redirect in 1.5 seconds
                     setTimeout(function () {
@@ -89,7 +90,7 @@
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
-                console.log('Error in Operation');
+               // console.log('Error in Operation');
             }
         });
     }
