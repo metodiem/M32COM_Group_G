@@ -24,7 +24,7 @@
                 <tbody id="memberData">
                 </tbody>
             </table>
-
+            
 
             <div class="form-group">
                 <label for="email">Invite someone to join your team:</label>
@@ -77,18 +77,18 @@
 
 
 <script>
+    //This Script gets team mebmbers and is ran when myTeam page is click
     
-    
-    var token = sessionStorage.getItem("token");
+    var token = sessionStorage.getItem("token");//get user logged intoken from session storage
     token = "Bearer " + token;
+    //get request using ajax, token authorisation is used to get corect users team
     $.ajax({
         url: 'http://localhost:52082/api/team/members',
         type: 'GET',
         headers: { "Authorization": token },
         dataType: 'json',
         success: function (data, textStatus, xhr) {
-            
-
+            //loop through results to display team members
             var usr = data.result;
             var k = '<tbody>';
             for (i in usr) {
@@ -99,20 +99,17 @@
                 k += "</tr>";
             }
             k += "</tbody>";
+            //set header to team name and also table body to team members
             document.getElementById("memberData").innerHTML = k;
-            //console.log(data);
             document.getElementById("teamName").innerHTML = usr[0].teamName;
-            
-            //$("#name").text(usr[0].name + " " + usr[0].surname);
-            //$("#teamName").text(usr[0].teamName);
-
         },
         error: function (xhr, textStatus, errorThrown) {
          // console.log('Error in Operation');
         }
     });
 
-
+    //Fuction getboats is used to get boats for the team that the current members is a part of. Again using a get method
+    //and the appropriate url for the api. The token i used previously is still stored in the token vairable.
     function getBoats() {
         $.ajax({
             url: 'http://localhost:52082/api/team/get/boat',
@@ -120,7 +117,11 @@
             headers: { "Authorization": token },
             dataType: 'json',
             success: function (data, textStatus, xhr) {
-                console.log(data);
+                
+                //using if statements, we determine if the team currently has a boat:
+                //if so we show the teams boat in a table
+                //if not, we allow the user to add a boat-
+                //error messages are controlled through the api only allowing the team leader to add a boat.
                 if (data.result !== null) {
                     document.getElementById("mdlshow").style.display = "inline";
                     document.getElementById("boatModel").innerHTML = data.result.model;
@@ -128,15 +129,9 @@
                     if (data.hasError == false) {
                         document.getElementById("mdl").style.display = "none";
                     }
-
-
-
                 } else {
-
                     document.getElementById("mdlshow").style.display = "none";
-
                 }
-
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log('Error in Operation');
@@ -153,7 +148,10 @@
 </script>
 
 <script>
+    //Function sendRequest is used to send and invite by email using POST method and the api's team invite link
     function sendRequest() {
+        //the email from input uses stringify to create a json application format variable 
+        //which is given to the api along with the token
         var email = {
             email : document.getElementById("email").value
         }
@@ -170,25 +168,20 @@
             processData: false,
             dataType: 'json',
             complete: function (data, textStatus, xhr) {
-                console.log(data.responseJSON.message);
+                //a message is displayed to let the used know the request has been sent
+                //the api will only allow request to be sent to registered users and users without a team
                 document.getElementById("sendInvite").innerHTML = data.responseJSON.message;
-                
-                //var invite = data.message;
-                //console.log(invite);
-                //document.getElementById("SendInvite").innerHTML = invite;
-                
-
             },
             error: function (xhr, textStatus, errorThrown) {
-                //console.log(errorThrown);
-               // console.log('Error in Operation');
+                console.log(errorThrown);
             }
         });
     }
-
 </script>
 
 <script>
+    //Function sendRequestBoat is used to add boats to a tea, stringify is used again to creat json/application variable
+    //User token and boat data is included in header
     function sendRequestBoat() {
         var boat = {
             model: document.getElementById("model").value,
@@ -199,7 +192,8 @@
 
         console.log(jsonText);
         var divform = document.getElementById("mdl");
-        token = ("Bearer " + sessionStorage.getItem(token));
+        var tokn = sessionStorage.getItem("token");
+        token = "Bearer " + tokn;
         $.ajax({
             url: 'http://localhost:52082/api/team/addboat',
             type: 'POST',
@@ -209,11 +203,11 @@
             processData: false,
             dataType: 'json',
             complete: function (data, textStatus, xhr) {
-                var bt = data.responseJSON;
-                console.log(data);
-                console.log(bt.hasError);
-                document.getElementById("boatstatus").innerHTML = bt.message;
-                if (bt.hasError == false) {
+                //message is displayed to show if boat has been successfully added.
+                //elements of addidng a boat are then hidden from users who have just added a boat.
+                var b = data.responseJSON;
+                document.getElementById("boatstatus").innerHTML = b.message;
+                if (b.hasError == false) {
 
                     divform.style.display = 'none';
                     document.getElementById("mdlshow").style.display = "inline";
@@ -226,10 +220,12 @@
                 console.log('Error in Operation');
             }
         });
-        getBoats();
-    }
-    
+        //once a user adds a boat a redirect is used after 1.5 seconds to reload the added boat.
+        setTimeout(function () {
+            window.location.href = "http://localhost:56067/myteam";
+        }, 1500);
 
+    }
 </script>
 
 

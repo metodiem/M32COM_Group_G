@@ -70,6 +70,10 @@ else
 }
 
 <script>
+    //This script is ran on every page and is used to manage logged in user and display notifications
+    //on the right side of the notification bar. Upon start we determine if a user is loged in by checking 
+    //session storage for a name, if this is true - their name is displayed along with log out
+    //if no user is logged in- log in and register button are shown.
     if (sessionStorage.getItem("name") == null) {
         document.getElementById("loggedIn").style.display = "inline";
         document.getElementById("loggedIn1").style.display = "inline";
@@ -81,25 +85,25 @@ else
         document.getElementById("loggedIn1").style.display = "none";
         document.getElementById("logOut").style.display = "inline";
     }
-
-
     document.getElementById("name").innerHTML = (sessionStorage.getItem("name"));
+    //token is also stored in a local variable from session storage
     var tokn = sessionStorage.getItem("token");
     var actionToken;
-    console.log(sessionStorage.getItem("name"));
     token = "Bearer " + tokn;
 
-
+    //get request is sent to api to get notifications for user
     $.ajax({
         url: 'http://localhost:52082/api/notification/all',
         type: 'GET',
         headers: { "Authorization": token },
         dataType: 'json',
         success: function (data, textStatus, xhr) {
-            console.log(data);
+            //an action token variable is included in the response from the api which is used to accept or decline invitations
+            //Also if a user has a notification:
+            //a notification badge is show with 1 in the navigation bar
+            //else notification badge is not shown
             var usr = data.result;
-            console.log(usr[0].actionToken + "actionnnnnn");
-            actionToken = usr[0].actionToken;
+            actionToken = usr.actionToken;
             if (usr.length !== 0) {
                 document.getElementById("badge").innerHTML = "1";
 
@@ -112,8 +116,6 @@ else
                 document.getElementById("badge").innerHTML = "0";
                 document.getElementById("badge").style.display = "none";
             }
-            // $("#name").text(usr[0].name + " " + usr[0].surname);
-            // $("#teamName").text(usr[0].teamName);
         },
         error: function (xhr, textStatus, errorThrown) {
 
@@ -121,6 +123,8 @@ else
         }
     });
 
+    //function accept is displayed along side the notification on a drop down menu along with buttons, 
+    //when accept is clicked the the action token previously mention is sent along with the authorization token"bearer"
     
     function accept() {
         console.log(actionToken + "actionnnnnn");
@@ -130,21 +134,21 @@ else
             headers: { "Authorization": token, "actionToken": actionToken },
             dataType: 'json',
             success: function (data, textStatus, xhr) {
-                console.log(data);
                 
-                // $("#name").text(usr[0].name + " " + usr[0].surname);
-                // $("#teamName").text(usr[0].teamName);
             },
             error: function (xhr, textStatus, errorThrown) {
 
                 console.log('Error in Operation');
             }
         });
+        //if the invitation is accepted the user is taken to the my team page when they can view their new team
         setTimeout(function () {
             window.location.href = "http://localhost:56067/myteam";
         }, 1500);
 
     }
+    //Function decline is similar to accept, once again the action token is sent along with the token bearer 
+    
     function decline() {
         console.log(actionToken + "actionnnnnn");
         $.ajax({
@@ -153,21 +157,21 @@ else
             headers: { "Authorization": token, "actionToken": actionToken },
             dataType: 'json',
             success: function (data, textStatus, xhr) {
-                console.log(data);
-
-                // $("#name").text(usr[0].name + " " + usr[0].surname);
-                // $("#teamName").text(usr[0].teamName);
+                
             },
             error: function (xhr, textStatus, errorThrown) {
 
                 console.log('Error in Operation');
             }
         });
+        //the user is taken to the home screen if they decline the invitation
         setTimeout(function () {
             window.location.href = "http://localhost:56067";
         }, 1500);
 
     }
+    //function logout is used when the user clicks logout in the navigation bar and clears the sessions storage 
+    //removing name and tokens for the given users
     function logout() {
         
         console.log(sessionStorage.clear());
